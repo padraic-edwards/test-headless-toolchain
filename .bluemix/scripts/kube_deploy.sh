@@ -5,7 +5,7 @@
 cat build.properties
 
 echo "Check cluster availability"
-ip_addr=$(bx cs workers $PIPELINE_KUBERNETES_CLUSTER_NAME | grep normal | awk '{ print $2 }')
+ip_addr=$(ibmcloud cs workers $PIPELINE_KUBERNETES_CLUSTER_NAME | grep normal | awk '{ print $2 }')
 if [ -z $ip_addr ]; then
     echo "$PIPELINE_KUBERNETES_CLUSTER_NAME not created or workers not ready"
     exit 1

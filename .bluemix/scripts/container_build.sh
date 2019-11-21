@@ -13,7 +13,7 @@ echo "ARCHIVE_DIR=${ARCHIVE_DIR}"
 # https://console.bluemix.net/docs/services/ContinuousDelivery/pipeline_deploy_var.html#deliverypipeline_environment
 
 # To review or change build options use:
-# bx cr build --help
+# ibmcloud cr build --help
 
 echo "=========================================================="
 echo "Checking for Dockerfile at the repository root"
@@ -26,29 +26,29 @@ fi
 
 echo "=========================================================="
 echo "Checking registry current plan and quota"
-bx cr plan
-bx cr quota
-echo "If needed, discard older images using: bx cr image-rm"
+ibmcloud cr plan
+ibmcloud cr quota
+echo "If needed, discard older images using: ibmcloud cr image-rm"
 
 echo "Checking registry namespace: ${REGISTRY_NAMESPACE}"
-ns=$( bx cr namespaces | grep ${REGISTRY_NAMESPACE} ||: )
+ns=$( ibmcloud cr namespaces | grep ${REGISTRY_NAMESPACE} ||: )
 if [ -z $ns ]; then
     echo "Registry namespace ${REGISTRY_NAMESPACE} not found, creating it."
-    bx cr namespace-add ${REGISTRY_NAMESPACE}
+    ibmcloud cr namespace-add ${REGISTRY_NAMESPACE}
     echo "Registry namespace ${REGISTRY_NAMESPACE} created."
 else
     echo "Registry namespace ${REGISTRY_NAMESPACE} found."
 fi
 
 echo -e "Existing images in registry"
-bx cr images
+ibmcloud cr images
 
 echo "=========================================================="
 echo -e "Building container image: ${IMAGE_NAME}:${BUILD_NUMBER}"
 set -x
-bx cr build -t $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER .
+ibmcloud cr build -t $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER .
 set +x
-bx cr image-inspect $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER
+ibmcloud cr image-inspect $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER
 
 echo "=========================================================="
 echo "Copying artifacts needed for deployment and testing"
